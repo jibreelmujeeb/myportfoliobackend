@@ -1,10 +1,18 @@
 const express = require("express");
 const nodemailer = require("nodemailer");
 const cors = require("cors");
+require("dotenv").config()
 
 const app = express();
 app.use(cors());
 app.use(express.json());
+app.use(express.urlencoded());
+
+
+const user = process.env.USER
+const pass = process.env.PASS
+console.log(pass, user);
+
 
 app.post("/send-email", async (req, res) => {
   const { fullName, email, organization, message } = req.body;
@@ -12,8 +20,8 @@ app.post("/send-email", async (req, res) => {
   const transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
-      user: "jibreelmujeeb@gmail.com", 
-      pass: "rnebdyrooswujhgu",  
+      user: user, 
+      pass: pass,  
     },
   });
 
@@ -50,10 +58,14 @@ Thank you once again for getting in touch. I value your interest and am eager to
     res.status(200).send("Emails sent successfully");
   } catch (error) {
     res.status(500).send("Error sending email");
+    console.log(error);
+    
     
   }
 });
 
 const PORT = 5000;
 app.listen(PORT, () => {
+  console.log('RUNNING');
+  
 });
